@@ -1,0 +1,16 @@
+version: '3'
+services:
+  webserver:
+    container_name: webserver
+    image: acirulis/php74-nginx
+    volumes:
+      - ../src:/var/www/html
+      - ./sites-enabled:/etc/nginx/sites-enabled
+    command: /root/startup.sh
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+#    Uncomment two following lines on linux and append with your host main IP to enable Xdebug
+#    extra_hosts:
+#      - "host.docker.internal:192.168.88.239"
