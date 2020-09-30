@@ -113,7 +113,23 @@ class LVURAPI
     function getLegalEntityBasicData($reg_nr)
     {
         $URL = sprintf('https://apigw.viss.gov.lv/legalentity/v1.0/legal-entity/%s', $reg_nr);
+        return $this->make_get_call($URL);
+    }
 
+    function getNaturalPerson($social_id)
+    {
+        $URL = sprintf('https://apigw.viss.gov.lv/naturalperson/v1.0/natural-person/%s', $social_id);
+        return $this->make_get_call($URL);
+    }
+
+    function getForeignEntity($id)
+    {
+        $URL = sprintf('https://apigw.viss.gov.lv/foreignentity/v1.0/foreign-entity/%s', $id);
+        return $this->make_get_call($URL);
+    }
+
+    private function make_get_call($URL)
+    {
         //Configuring URL & SSL
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $URL);
@@ -130,7 +146,7 @@ class LVURAPI
         $headers = array(
             "cache-control: no-cache",
             "Accept: application/json",
-            "Authorization: Bearer ".$this->token,
+            "Authorization: Bearer " . $this->token,
         );
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -139,18 +155,21 @@ class LVURAPI
 //        var_dump(curl_error($curl));
 
         $json = json_decode($result, true);
-//        var_dump($json);
         curl_close($curl);
         return $json;
     }
-
 }
 
 $token = '***';
 $EntepriseRegister = new LVURAPI();
 //$EntepriseRegister = new LVURAPI($token);
 
-$company = $EntepriseRegister->getLegalEntityBasicData('50103381061');
-
+//$company = $EntepriseRegister->getLegalEntityBasicData('40003000642');
 //var_dump($company);
-var_dump($company['officers']);
+//var_dump($company['officers']);
+
+$person = $EntepriseRegister->getNaturalPerson('800047-00008');
+var_dump($person);
+
+//$foreign = $EntepriseRegister->getForeignEntity('800047-00008');
+//var_dump($foreign);
